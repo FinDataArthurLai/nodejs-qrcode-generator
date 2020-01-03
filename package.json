@@ -1,0 +1,17 @@
+{
+  "name": "qrcode-renerator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "canvas": "^2.6.1",
+    "fast-csv": "^4.0.2",
+    "magic-qr-code": "^1.0.3"
+  }
+}
