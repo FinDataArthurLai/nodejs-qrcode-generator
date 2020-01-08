@@ -3,6 +3,7 @@ const path = require("path");
 const csv = require("fast-csv");
 const MQRCode = require("magic-qr-code");
 const Canvas = require("canvas");
+const Images = require("images");
 
 function draw(data, size = 1024, ftype = `svg`) {
   let marginSize = 1;
@@ -15,10 +16,10 @@ function draw(data, size = 1024, ftype = `svg`) {
     throw new Error("cannot draw this QR Code");
   }
   let margin = Math.floor((size - pointSize * dataLength) / 2);
-  ctx.fillStyle = "white"; 
+  ctx.fillStyle = "white";
   ctx.fillRect(0, 0, size, size);
   // 繪製 qrcode
-  ctx.fillStyle = "rgba(93,188,210,1)";
+  ctx.fillStyle = "black"; //"rgba(93,188,210,1)";
   for (let i = 0; i < dataLength; ++i) {
     for (let j = 0; j < dataLength; ++j) {
       if (data[i][j]) {
@@ -32,7 +33,7 @@ function draw(data, size = 1024, ftype = `svg`) {
 }
 
 let aryRows = [];
-fs.createReadStream(path.resolve(__dirname, "qrcode.csv")) // 讀 csv 檔
+fs.createReadStream(path.resolve(__dirname, "APS_qrcode_auto.csv")) // 讀 csv 檔
   .pipe(csv.parse({ headers: true }))
   .on("error", error => console.error(error))
   .on("data", row => {
@@ -40,7 +41,8 @@ fs.createReadStream(path.resolve(__dirname, "qrcode.csv")) // 讀 csv 檔
   })
   .on("end", rowCount => {
     console.log(`Parsed ${rowCount} rows`);
-    aryRows.forEach(function(row) { // 解析檔案結構做相對應 QRCode 產出
+    aryRows.forEach(function(row) {
+      // 解析檔案結構做相對應 QRCode 產出
       console.log(row);
 
       if (row.c_count != 0) {
@@ -53,10 +55,15 @@ fs.createReadStream(path.resolve(__dirname, "qrcode.csv")) // 讀 csv 檔
 
       if (row.b_count != 0) {
         let result = MQRCode.encode(row.prod_uri.toUpperCase());
-        let ftype = `svg`;
+        let ftype = `png`;
+        // drawImage('citybank.jpg', row.file_name_c, result, parseInt(row.b_size), ftype);
         let canvas = draw(result, parseInt(row.b_size), ftype);
         let pngBuffer = canvas.toBuffer();
-        fs.writeFileSync(`./images/44/${row.file_name}.${ftype}`, pngBuffer);
+        fs.writeFileSync(`./images/aps/${row.file_name_c}.${ftype}`, pngBuffer);
+
+        Images("citybank.jpg")
+          .draw(Images(`./images/aps/${row.file_name_c}.${ftype}`), 780, 20)
+          .save(`./images/aps/${row.file_name_c}_demo.jpg`);
       }
     });
   });

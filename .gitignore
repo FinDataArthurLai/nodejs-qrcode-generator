@@ -31,3 +31,9 @@ npm-debug.log
 
 # OSX hidden files
 .DS_Store
+
+*.jpg
+*.svg
+*.png
+*.zip
+*.csv
