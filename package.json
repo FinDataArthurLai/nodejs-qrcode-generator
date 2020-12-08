@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "canvas": "^2.6.1",
-    "fast-csv": "^4.0.2",
+    "fast-csv": "^4.3.6",
     "images": "^3.0.2",
     "magic-qr-code": "^1.0.3"
   }
